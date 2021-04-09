@@ -45,9 +45,8 @@ public class CarbonUserDetailsService implements UserDetailsService {
         }else{
             CarbonUserDetails carbonUserDetails = new CarbonUserDetails();
             BeanUtils.copyProperties(user, carbonUserDetails);
-            Set<GrantedAuthority> authorities = new HashSet<>(); // 角色集合
-
-            List<UserRole> roleList = userClient.getRoleByUserId(carbonUserDetails.getId());
+            Set<GrantedAuthority> authorities = new HashSet<>();
+            List<UserRole> roleList = userClient.getRoleByUserId(carbonUserDetails.getId()); // user role list
             roleList.forEach(role -> {
                 authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
             });

@@ -1,9 +1,6 @@
 package cn.carbonface.carbonsecurity.core.interceptor;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * @Classname FeignOnly
@@ -14,6 +11,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@NoAuth
+@Documented
+@NoAuth //the FeignOnly controller is also a NoAuth controller as well
 public @interface FeignOnly {
 }

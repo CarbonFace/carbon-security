@@ -17,32 +17,32 @@ public class CarbonUserDetails extends User implements UserDetails {
 
     private static final long serialVersionUID = 1753124022099818053L;
     /**
-     * 用户角色
+     * user authorities
      */
     private Collection<GrantedAuthority> authorities;
 
     /**
-     * 账号是否过期
+     * if the account expired
      */
     private boolean isAccountNonExpired = false;
 
     /**
-     * 账号是否锁定
+     * if the account locked (not in the early access in CarboonFace Cloud)
      */
     private boolean isAccountNonLocked = false;
 
     /**
-     * 证书是否过期
+     * if the credentials expired (not in the early access in CarboonFace Cloud)
      */
     private boolean isCredentialsNonExpired = false;
 
     /**
-     * 账号是否有效
+     * if the account is enabled (not in the early access in CarboonFace Cloud)
      */
     private boolean isEnabled = true;
 
     /**
-     * 登陆的IP地址
+     * ip address
      */
     private String ip;
 

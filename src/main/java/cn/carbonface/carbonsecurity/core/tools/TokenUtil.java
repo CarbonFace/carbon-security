@@ -24,7 +24,7 @@ import java.util.*;
 
 /**
  * @Classname TokenUtil
- * @Description TokenUtil
+ * @Description TokenUtil used for security service
  * @Author CarbonFace <553127022@qq.com>
  * @Date 2021/3/17 17:54
  * @Version V1.0
@@ -41,29 +41,30 @@ public class TokenUtil {
     }
 
     /**
-     * 创建Token
+     * lay Token
      *
-     * @param carbonUserDetails 用户信息
+     * @param carbonUserDetails user details
      * @return
      */
     public static String layToken(CarbonUserDetails carbonUserDetails) {
-        String token = Jwts.builder().setId(// 设置JWT
-                carbonUserDetails.getId().toString()) // 用户Id
-                .setSubject(carbonUserDetails.getUsername()) // 主题
-                .setIssuedAt(new Date()) // 签发时间
-                .setIssuer("CarbonFace") // 签发者
-                .setExpiration(new Date(System.currentTimeMillis() + JWTConfig.expiration)) // 过期时间
-                .signWith(SignatureAlgorithm.HS512, JWTConfig.secret) // 签名算法、密钥
-                .claim("authorities", JSON.toJSONString(carbonUserDetails.getAuthorities())) // 自定义其他属性，如用户组织机构ID，用户所拥有的角色，用户权限信息等
-                .claim("ip",carbonUserDetails.getIp())  //设置ip
+                                    // set JWT
+        String token = Jwts.builder().setId(
+                carbonUserDetails.getId().toString()) // user id
+                .setSubject(carbonUserDetails.getUsername()) // subject
+                .setIssuedAt(new Date()) // issued time
+                .setIssuer("CarbonFace") // issuer
+                .setExpiration(new Date(System.currentTimeMillis() + JWTConfig.expiration)) // expire time
+                .signWith(SignatureAlgorithm.HS512, JWTConfig.secret) // signature algorithm and secret key
+                .claim("authorities", JSON.toJSONString(carbonUserDetails.getAuthorities())) // user authorities
+                .claim("ip",carbonUserDetails.getIp())  //set ip address
                 .compact();
         return JWTConfig.tokenPrefix + token;
     }
 
     /**
-     * 刷新Token
+     * refresh Token
      *
-     * @param oldToken 过期但未超过刷新时间的Token
+     * @param oldToken refresh token time which is expired but not reach the dead time
      * @return
      */
     public static String refreshAccessToken(String oldToken) {
@@ -75,24 +76,24 @@ public class TokenUtil {
 
 
     /**
-     * 解析Token
-     *
-     * @param token Token信息
+     * parse Token
+     * parse the token information
+     * @param token
      * @return
      */
     public static CarbonUserDetails parseAccessToken(String token) {
         CarbonUserDetails carbonUserDetails = null;
         if (StringUtils.hasLength(token)) {
             try {
-                // 去除JWT前缀
+                //remove JWT prefix
                 token = token.substring(JWTConfig.tokenPrefix.length());
-                // 解析Token
+                // parse Token
                 Claims claims = Jwts.parser().setSigningKey(JWTConfig.secret).parseClaimsJws(token).getBody();
-                // 获取用户信息
+                // acquire user details
                 carbonUserDetails = new CarbonUserDetails();
                 carbonUserDetails.setId(Long.parseLong(claims.getId()));
                 carbonUserDetails.setUsername(claims.getSubject());
-                // 获取角色
+                // acquire authorities
                 Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
                 String authority = claims.get("authorities").toString();
                 if (StringUtils.hasLength(authority)) {
@@ -114,15 +115,15 @@ public class TokenUtil {
     }
 
     /**
-     * 保存Token信息到Redis中
+     * save token information to redis
      *
-     * @param token    Token信息
-     * @param username 用户名
-     * @param ip       IP
+     * @param token    token
+     * @param username username
+     * @param ip       ip address
      */
     public static void setTokenInfo(String token, String username, String ip) {
         if (StringUtils.hasLength(token)) {
-            // 去除JWT前缀
+            // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
 
             Integer refreshTime = JWTConfig.refreshTime;
@@ -137,39 +138,39 @@ public class TokenUtil {
     }
 
     /**
-     * 将Token放到黑名单中
+     * add token into black list
      *
-     * @param token Token信息
+     * @param token Token
      */
     public static void addBlackList(String token) {
         if (StringUtils.hasLength(token)) {
-            // 去除JWT前缀
+            // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
             SecurityRedisUtil.hSet("blackList", token, dateFormatter.format(LocalDateTime.now()));
         }
     }
 
     /**
-     * Redis中删除Token
+     * delete token in redis
      *
-     * @param token Token信息
+     * @param token Token
      */
     public static void deleteRedisToken(String token) {
         if (StringUtils.hasLength(token)) {
-            // 去除JWT前缀
+            // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
             SecurityRedisUtil.del(token);
         }
     }
 
     /**
-     * 判断当前Token是否在黑名单中
+     * judge whether the current token is in the blacklist
      *
-     * @param token Token信息
+     * @param token Token
      */
     public static boolean isBlackList(String token) {
         if (StringUtils.hasLength(token)) {
-            // 去除JWT前缀
+            // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
             return SecurityRedisUtil.hasKey("blackList", token);
         }
@@ -177,10 +178,10 @@ public class TokenUtil {
     }
 
     /**
-     * 是否过期
+     * judge whether the current token is expired
      *
-     * @param expiration 过期时间，字符串
-     * @return 过期返回True，未过期返回false
+     * @param expiration expiration string
+     * @return
      */
     public static boolean isExpiration(String expiration) {
         LocalDateTime expirationTime = LocalDateTime.parse(expiration, dateFormatter);
@@ -192,10 +193,10 @@ public class TokenUtil {
     }
 
     /**
-     * 是否有效
+     * judge whether the current token is valid
      *
-     * @param refreshTime 刷新时间，字符串
-     * @return 有效返回True，无效返回false
+     * @param refreshTime refreshTime string
+     * @return
      */
     public static boolean isValid(String refreshTime) {
         LocalDateTime validTime = LocalDateTime.parse(refreshTime, dateFormatter);
@@ -207,14 +208,14 @@ public class TokenUtil {
     }
 
     /**
-     * 检查Redis中是否存在Token
+     * seek for the token in the redis
      *
-     * @param token Token信息
+     * @param token Token
      * @return
      */
     public static boolean hasToken(String token) {
         if (StringUtils.hasLength(token)) {
-            // 去除JWT前缀
+            // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
             return SecurityRedisUtil.hasKey(token);
         }
@@ -222,14 +223,14 @@ public class TokenUtil {
     }
 
     /**
-     * 从Redis中获取过期时间
+     * get the expire time of token in the redis
      *
-     * @param token Token信息
-     * @return 过期时间，字符串
+     * @param token Token
+     * @return
      */
     public static String getExpirationByToken(String token) {
         if (StringUtils.hasLength(token)) {
-            // 去除JWT前缀
+            // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
             return SecurityRedisUtil.hGet(token, "expiration").toString();
         }
@@ -237,14 +238,14 @@ public class TokenUtil {
     }
 
     /**
-     * 从Redis中获取刷新时间
+     * get the refresh time of token in redis
      *
-     * @param token Token信息
-     * @return 刷新时间，字符串
+     * @param token Token
+     * @return
      */
     public static String getRefreshTimeByToken(String token) {
         if (StringUtils.hasLength(token)) {
-            // 去除JWT前缀
+            // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
             return SecurityRedisUtil.hGet(token, "refreshTime").toString();
         }
@@ -252,14 +253,14 @@ public class TokenUtil {
     }
 
     /**
-     * 从Redis中获取用户名
+     * get the username of the token in redis
      *
-     * @param token Token信息
+     * @param token Token
      * @return
      */
     public static String getUserNameByToken(String token) {
         if (StringUtils.hasLength(token)) {
-            // 去除JWT前缀
+            // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
             return SecurityRedisUtil.hGet(token, "username").toString();
         }
@@ -267,14 +268,14 @@ public class TokenUtil {
     }
 
     /**
-     * 从Redis中获取IP
+     * get the ip address of the token from redis
      *
-     * @param token Token信息
+     * @param token Token
      * @return
      */
     public static String getIpByToken(String token) {
         if (StringUtils.hasLength(token)) {
-            // 去除JWT前缀
+            // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
             return SecurityRedisUtil.hGet(token, "ip").toString();
         }

@@ -151,7 +151,7 @@ public class CarbonSecurityConfig extends WebSecurityConfigurerAdapter {
             if (handlerMethod.getMethodAnnotation(NoAuth.class) != null) {
                 Set<String> patterns = requestMappingInfo.getPatternsCondition().getPatterns();
                 for (String pattern : patterns) {
-                    log.info("pattern ->" + pattern + " added to the white list of carbon-security");
+                    log.info("url ->" + pattern + " added to the white list of carbon-security");
                     http.authorizeRequests().antMatchers(pattern).permitAll();
                 }
             }

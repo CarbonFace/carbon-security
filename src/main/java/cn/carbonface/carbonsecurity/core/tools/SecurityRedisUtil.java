@@ -4,13 +4,10 @@
 
 package cn.carbonface.carbonsecurity.core.tools;
 
-import cn.carbonface.carboncommon.tools.RedisUtil;
-import io.lettuce.core.resource.ClientResources;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.data.redis.connection.RedisConfiguration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -21,13 +18,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.time.Duration;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Classname Redis
- * @Description TODO
+ * @Classname SecurityRedisUtil
+ * @Description Special Security RedisUtil which is only use for security redis operation and use a separate redis database
  * @Author CarbonFace <553127022@qq.com>
  * @Date 2021/4/8 10:02
  * @Version V1.0

@@ -14,7 +14,7 @@ import java.util.Set;
 
 /**
  * @Classname UserPermissionEvaluator
- * @Description TODO
+ * @Description user permissions control for annotation @PreAuthorize
  * @Author CarbonFace <553127022@qq.com>
  * @Date 2021/3/31 14:13
  * @Version V1.0
@@ -31,13 +31,13 @@ public class UserPermissionEvaluator implements PermissionEvaluator {
     @Override
     public boolean hasPermission(Authentication authentication, Object targetUrl, Object permission) {
         CarbonUserDetails carbonUserDetails = (CarbonUserDetails) authentication.getPrincipal();
-        Set<String> permissions = new HashSet<>(); // 用户权限
+        Set<String> permissions = new HashSet<>(); // user authorization
         List<RoleAuth> authList = userClient.getAuthByUserId(carbonUserDetails.getId());
         authList.forEach(auth -> {
             permissions.add(auth.getAuthPermission());
         });
 
-        // 判断是否拥有权限
+        // if has permission return true
         if (permissions.contains(permission.toString())) {
             return true;
         }

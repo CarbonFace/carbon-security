@@ -18,8 +18,8 @@ import java.lang.reflect.Method;
 
 /**
  * @Classname AnnotationInterceptor
- * @Description Feign interceptor for feign client invoking with annotation@FeignOnly that only can invoke via feign
- *              which is not expose to the gateway and nginx
+ * @Description Feign interceptor for feign client invoking with annotation @FeignOnly that only can invoke via feign
+ *              clients which is not expose to the gateway and nginx
  * @Author CarbonFace <553127022@qq.com>
  * @Date 2021/3/26 18:00
  * @Version V1.0

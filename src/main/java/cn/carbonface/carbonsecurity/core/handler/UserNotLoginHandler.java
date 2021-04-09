@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @Classname UserNotLoginHandler
- * @Description TODO
+ * @Description handler for user not login case
  * @Author CarbonFace   <553127022@qq.com>
  * @Date 2021/3/17 18:27
  * @Version V1.0

@@ -4,19 +4,19 @@
 
 package cn.carbonface.carbonsecurity.core.interceptor;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * @Classname NoAuth
- * @Description TODO
+ * @Description NoAuth annotation which allowed the service recognized controllers as no authorization need controller,
+ *              with the 'CarbonSecurityConfig' imported, the service will automatically scan the controllers which is annotated by
+ *              '@NoAuth' annotation and add them to security white list
  * @Author CarbonFace <553127022@qq.com>
  * @Date 2021/4/6 16:38
  * @Version V1.0
  */
 @Target({ElementType.METHOD,ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface NoAuth {
 }

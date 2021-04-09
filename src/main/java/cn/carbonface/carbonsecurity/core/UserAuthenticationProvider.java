@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Classname UserAuthenticationProvider
- * @Description TODO
+ * @Description user authentication action determined
  * @Author CarbonFace <553127022@qq.com>
  * @Date 2021/3/31 11:05
  * @Version V1.0
@@ -30,7 +30,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = (String) authentication.getPrincipal();
-        String password = (String) authentication.getCredentials(); // 获取密码
+        String password = (String) authentication.getCredentials(); // acquire password
         CarbonUserDetails carbonUserDetails = (CarbonUserDetails) userDetailsService.loadUserByUsername(username);
         if (carbonUserDetails == null){
             throw new UsernameNotFoundException("用户不存在");
