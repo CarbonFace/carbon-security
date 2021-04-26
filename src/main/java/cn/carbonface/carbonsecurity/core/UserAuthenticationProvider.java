@@ -1,5 +1,6 @@
 package cn.carbonface.carbonsecurity.core;
 
+import cn.carbonface.carboncommon.dto.RetCode;
 import cn.carbonface.carbonsecurity.core.dto.CarbonUserDetails;
 import cn.carbonface.carbonsecurity.core.service.CarbonUserDetailsService;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -12,11 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * @Classname UserAuthenticationProvider
- * @Description user authentication action determined
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/3/31 11:05
- * @Version V1.0
+ * classname UserAuthenticationProvider
+ * description user authentication action determined
+ * @author CarbonFace <553127022@qq.com>
+ * date 2021/3/31 11:05
+ * @version V1.0
  */
 @Component
 public class UserAuthenticationProvider implements AuthenticationProvider {
@@ -33,10 +34,10 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         String password = (String) authentication.getCredentials(); // acquire password
         CarbonUserDetails carbonUserDetails = (CarbonUserDetails) userDetailsService.loadUserByUsername(username);
         if (carbonUserDetails == null){
-            throw new UsernameNotFoundException("用户不存在");
+            throw new UsernameNotFoundException(RetCode.USER_ACCOUNT_NOT_EXIST.getMessage());
         }
         if (!new BCryptPasswordEncoder().matches(password, carbonUserDetails.getPassword())) {
-            throw new BadCredentialsException("用户名或密码错误");
+            throw new BadCredentialsException(RetCode.USER_CREDENTIALS_ERROR.getMessage());
         }
 
         return new UsernamePasswordAuthenticationToken(carbonUserDetails,password,carbonUserDetails.getAuthorities());

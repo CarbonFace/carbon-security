@@ -41,7 +41,7 @@ public class CarbonUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         User user = userClient.getUserByUsername(username);
         if (user ==null){
-            return null;
+            return null;//there might be a bug when feign client invoke returns a user object but contains nothing
         }else{
             CarbonUserDetails carbonUserDetails = new CarbonUserDetails();
             BeanUtils.copyProperties(user, carbonUserDetails);

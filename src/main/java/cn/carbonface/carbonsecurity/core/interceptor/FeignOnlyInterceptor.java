@@ -50,6 +50,8 @@ public class FeignOnlyInterceptor implements HandlerInterceptor {
         }else if (handler instanceof ResourceHttpRequestHandler){
             ApplicationContext applicationContext = ((ResourceHttpRequestHandler) handler).getApplicationContext();
             log.warn("WARN!THERE IS A TYPE WRONG WHICH NEED SOME ATTENTION!");
+            String requestUri = ((ResourceHttpRequestHandler) handler).getUrlPathHelper().getRequestUri(request);
+            log.warn("THIS URI IS : " + requestUri);
         }
 
         return feignOnly != null && !feignInvoke;

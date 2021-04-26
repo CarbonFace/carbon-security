@@ -78,4 +78,28 @@ public class JWTConfig {
     public void setRefreshTime(Integer refreshTime) {
         this.refreshTime = refreshTime * 24 * 60 * 60 * 1000;
     }
+
+    public static String getSecret() {
+        return secret;
+    }
+
+    public static String getTokenHeader() {
+        return tokenHeader;
+    }
+
+    public static String getTokenPrefix() {
+        return tokenPrefix;
+    }
+
+    public static Integer getExpiration() {
+        return expiration;
+    }
+
+    public static String getAntMatchers() {
+        return antMatchers;
+    }
+
+    public static Integer getRefreshTime() {
+        return refreshTime;
+    }
 }

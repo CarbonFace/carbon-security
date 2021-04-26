@@ -34,8 +34,6 @@ public class UserLoginSuccessHandler implements AuthenticationSuccessHandler {
         String ip = HttpUtil.getIpAddress(httpServletRequest);
         carbonUserDetails.setIp(ip);
         String token = TokenUtil.layToken(carbonUserDetails);
-        Map<String, String> tokenMap = new HashMap<>();
-        tokenMap.put("token", token);
         // 保存Token信息到Redis中
         TokenUtil.setTokenInfo(token, carbonUserDetails.getUsername(), ip);
         log.info("用户{}登录成功，Token信息已保存到Redis", carbonUserDetails.getUsername());

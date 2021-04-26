@@ -1,7 +1,7 @@
 package cn.carbonface.carbonsecurity.core.tools;
 
 
-
+import cn.carbonface.carboncommon.exception.CarbonException;
 import cn.carbonface.carbonsecurity.core.config.JWTConfig;
 import cn.carbonface.carbonsecurity.core.dto.CarbonUserDetails;
 import cn.carbonface.carbonsecurity.core.service.CarbonUserDetailsService;
@@ -14,6 +14,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -35,6 +36,12 @@ public class TokenUtil {
 
     private static CarbonUserDetailsService carbonUserDetailsService;
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final String User_Name    = "username";
+    public static final String Authorities  = "auth";
+    public static final String Expiration   = "expiration";
+    public static final String Refresh_Time = "refreshTime";
+    public static final String IP           = "ip";
+    public static final String Black_List   = "blacklist";
 
     public TokenUtil(CarbonUserDetailsService carbonUserDetailsService) {
         TokenUtil.carbonUserDetailsService = carbonUserDetailsService;
@@ -47,7 +54,7 @@ public class TokenUtil {
      * @return
      */
     public static String layToken(CarbonUserDetails carbonUserDetails) {
-                                    // set JWT
+        // set JWT
         String token = Jwts.builder().setId(
                 carbonUserDetails.getId().toString()) // user id
                 .setSubject(carbonUserDetails.getUsername()) // subject
@@ -55,8 +62,8 @@ public class TokenUtil {
                 .setIssuer("CarbonFace") // issuer
                 .setExpiration(new Date(System.currentTimeMillis() + JWTConfig.expiration)) // expire time
                 .signWith(SignatureAlgorithm.HS512, JWTConfig.secret) // signature algorithm and secret key
-                .claim("authorities", JSON.toJSONString(carbonUserDetails.getAuthorities())) // user authorities
-                .claim("ip",carbonUserDetails.getIp())  //set ip address
+                .claim(Authorities, JSON.toJSONString(carbonUserDetails.getAuthorities())) // user authorities
+                .claim(IP, carbonUserDetails.getIp())  //set ip address
                 .compact();
         return JWTConfig.tokenPrefix + token;
     }
@@ -78,6 +85,7 @@ public class TokenUtil {
     /**
      * parse Token
      * parse the token information
+     *
      * @param token
      * @return
      */
@@ -95,7 +103,7 @@ public class TokenUtil {
                 carbonUserDetails.setUsername(claims.getSubject());
                 // acquire authorities
                 Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-                String authority = claims.get("authorities").toString();
+                String authority = claims.get(Authorities).toString();
                 if (StringUtils.hasLength(authority)) {
                     List<Map<String, String>> authorityList = JSON.parseObject(authority,
                             new TypeReference<List<Map<String, String>>>() {
@@ -107,8 +115,11 @@ public class TokenUtil {
                     }
                 }
                 carbonUserDetails.setAuthorities(authorities);
+                String ip = claims.get(IP).toString();
+                carbonUserDetails.setIp(ip);
             } catch (Exception e) {
                 log.error("解析Token异常：" + e);
+                carbonUserDetails = null;
             }
         }
         return carbonUserDetails;
@@ -128,11 +139,11 @@ public class TokenUtil {
 
             Integer refreshTime = JWTConfig.refreshTime;
             LocalDateTime localDateTime = LocalDateTime.now();
-            SecurityRedisUtil.hSet(token, "username", username, refreshTime);
-            SecurityRedisUtil.hSet(token, "ip", ip, refreshTime);
-            SecurityRedisUtil.hSet(token, "refreshTime",
+            SecurityRedisUtil.hSet(token, User_Name, username, refreshTime);
+            SecurityRedisUtil.hSet(token, IP, ip, refreshTime);
+            SecurityRedisUtil.hSet(token, Refresh_Time,
                     dateFormatter.format(localDateTime.plus(JWTConfig.refreshTime, ChronoUnit.MILLIS)), refreshTime);
-            SecurityRedisUtil.hSet(token, "expiration", dateFormatter.format(localDateTime.plus(JWTConfig.expiration, ChronoUnit.MILLIS)),
+            SecurityRedisUtil.hSet(token, Expiration, dateFormatter.format(localDateTime.plus(JWTConfig.expiration, ChronoUnit.MILLIS)),
                     refreshTime);
         }
     }
@@ -146,7 +157,7 @@ public class TokenUtil {
         if (StringUtils.hasLength(token)) {
             // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
-            SecurityRedisUtil.hSet("blackList", token, dateFormatter.format(LocalDateTime.now()));
+            SecurityRedisUtil.hSet(Black_List, token, dateFormatter.format(LocalDateTime.now()));
         }
     }
 
@@ -172,7 +183,7 @@ public class TokenUtil {
         if (StringUtils.hasLength(token)) {
             // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
-            return SecurityRedisUtil.hasKey("blackList", token);
+            return SecurityRedisUtil.hasKey(Black_List, token);
         }
         return false;
     }
@@ -190,6 +201,14 @@ public class TokenUtil {
             return true;
         }
         return false;
+    }
+
+    public static void extendExpiration(String token) {
+        if (hasToken(token)) {
+            token = token.substring(JWTConfig.tokenPrefix.length());
+            LocalDateTime localDateTime = LocalDateTime.now();
+            SecurityRedisUtil.hSet(token, Expiration, dateFormatter.format(localDateTime.plus(JWTConfig.expiration, ChronoUnit.MILLIS)));
+        }
     }
 
     /**
@@ -232,7 +251,7 @@ public class TokenUtil {
         if (StringUtils.hasLength(token)) {
             // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
-            return SecurityRedisUtil.hGet(token, "expiration").toString();
+            return SecurityRedisUtil.hGet(token, Expiration).toString();
         }
         return null;
     }
@@ -247,7 +266,7 @@ public class TokenUtil {
         if (StringUtils.hasLength(token)) {
             // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
-            return SecurityRedisUtil.hGet(token, "refreshTime").toString();
+            return SecurityRedisUtil.hGet(token, Refresh_Time).toString();
         }
         return null;
     }
@@ -262,7 +281,7 @@ public class TokenUtil {
         if (StringUtils.hasLength(token)) {
             // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
-            return SecurityRedisUtil.hGet(token, "username").toString();
+            return SecurityRedisUtil.hGet(token, User_Name).toString();
         }
         return null;
     }
@@ -277,7 +296,7 @@ public class TokenUtil {
         if (StringUtils.hasLength(token)) {
             // remove JWT prefix
             token = token.substring(JWTConfig.tokenPrefix.length());
-            return SecurityRedisUtil.hGet(token, "ip").toString();
+            return SecurityRedisUtil.hGet(token, IP).toString();
         }
         return null;
     }

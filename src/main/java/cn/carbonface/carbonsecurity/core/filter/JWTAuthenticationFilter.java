@@ -72,7 +72,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
                 }
                 CarbonUserDetails carbonUserDetails = TokenUtil.parseAccessToken(token);
                 if (carbonUserDetails != null) {
-                    if (ip !=null && ip.equals(carbonUserDetails.getIp())) {
+                    if (ip !=null && !ip.equals(carbonUserDetails.getIp())) {
                         log.info("用户{}请求IP与Token中IP信息不一致", username);
                         // if the ip address changed and front page brings the same token for request, add to the black list
                         TokenUtil.addBlackList(token);
@@ -83,6 +83,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             carbonUserDetails, carbonUserDetails.getId(), carbonUserDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                    TokenUtil.extendExpiration(token);
                 }
             }
         }
