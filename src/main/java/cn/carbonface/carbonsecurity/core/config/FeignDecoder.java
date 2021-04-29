@@ -44,8 +44,7 @@ public class FeignDecoder implements Decoder{
             if (retCode != RetCode.SUCCESS.getCode()){
                 throw new DecodeException(retCode,result.getMsg(),response.request());
             }
-            throw new DecodeException(retCode,result.getMsg(),response.request());
-//            return result;
+            return result;
         }else{
             throw new DecodeException(RetCode.INTERNAL_ERROR.getCode(),RetCode.INTERNAL_ERROR.getMessage(),response.request());
         }
