@@ -15,7 +15,7 @@ import java.lang.annotation.*;
  * @Date 2021/4/6 16:38
  * @Version V1.0
  */
-@Target({ElementType.METHOD,ElementType.ANNOTATION_TYPE})
+@Target({ElementType.METHOD,ElementType.TYPE,ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface NoAuth {

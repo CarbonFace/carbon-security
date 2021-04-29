@@ -23,6 +23,6 @@ public class UserLoginFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                         AuthenticationException authenticationException) {
-        ApiResult.response(httpServletResponse,new ApiResult(null,authenticationException.getMessage(), RetCode.USER_LOGIN_FAIL.getCode()));
+        ApiResult.response(httpServletResponse,new ApiResult<>(null,authenticationException.getMessage(), RetCode.USER_LOGIN_FAIL.getCode()));
     }
 }

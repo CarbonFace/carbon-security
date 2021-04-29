@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * @Date 2021/3/26 18:11
  * @Version V1.0
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @NoAuth //the FeignOnly controller is also a NoAuth controller as well

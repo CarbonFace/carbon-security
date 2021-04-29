@@ -1,6 +1,7 @@
 package cn.carbonface.carbonsecurity.core.feignclient;
 
 
+import cn.carbonface.carboncommon.dto.ApiResult;
 import cn.carbonface.carboncommon.dto.userdto.RoleAuth;
 import cn.carbonface.carboncommon.dto.userdto.User;
 import cn.carbonface.carboncommon.dto.userdto.UserRole;
@@ -22,11 +23,11 @@ import java.util.List;
 public interface UserClient {
 
     @PostMapping("user/getRoleByUserId")
-    List<UserRole> getRoleByUserId(@RequestParam("userId") Long userId);
+    ApiResult<List<UserRole>> getRoleByUserId(@RequestParam("userId") Long userId);
 
     @PostMapping("user/getAuthByUserId")
-    List<RoleAuth> getAuthByUserId(@RequestParam("userId")Long userId);
+    ApiResult<List<RoleAuth>> getAuthByUserId(@RequestParam("userId")Long userId);
 
     @PostMapping("user/getUserByUsername")
-    User getUserByUsername(@RequestParam("username")String username);
+    ApiResult<User> getUserByUsername(@RequestParam("username")String username);
 }

@@ -2,6 +2,8 @@ package cn.carbonface.carbonsecurity.core.service;
 
 
 
+import cn.carbonface.carboncommon.dto.ApiResult;
+import cn.carbonface.carboncommon.exception.CarbonException;
 import cn.carbonface.carbonsecurity.core.dto.CarbonUserDetails;
 import cn.carbonface.carbonsecurity.core.feignclient.UserClient;
 import cn.carbonface.carboncommon.dto.userdto.User;
@@ -38,18 +40,25 @@ public class CarbonUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        User user = userClient.getUserByUsername(username);
+    public UserDetails loadUserByUsername(String username){
+        User user = null;
+        ApiResult<User> userResult = userClient.getUserByUsername(username);
+        if (userResult.success()){
+            user = userResult.getData();
+        }
         if (user ==null){
             return null;//there might be a bug when feign client invoke returns a user object but contains nothing
         }else{
             CarbonUserDetails carbonUserDetails = new CarbonUserDetails();
             BeanUtils.copyProperties(user, carbonUserDetails);
             Set<GrantedAuthority> authorities = new HashSet<>();
-            List<UserRole> roleList = userClient.getRoleByUserId(carbonUserDetails.getId()); // user role list
-            roleList.forEach(role -> {
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
-            });
+            ApiResult<List<UserRole>> apiResult = userClient.getRoleByUserId(carbonUserDetails.getId()); // user role list
+            if (apiResult.success()) {
+                List<UserRole> roleList = apiResult.getData();
+                roleList.forEach(role -> {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
+                });
+            }
             carbonUserDetails.setAuthorities(authorities);
             return carbonUserDetails;
         }

@@ -37,6 +37,6 @@ public class UserLoginSuccessHandler implements AuthenticationSuccessHandler {
         // 保存Token信息到Redis中
         TokenUtil.setTokenInfo(token, carbonUserDetails.getUsername(), ip);
         log.info("用户{}登录成功，Token信息已保存到Redis", carbonUserDetails.getUsername());
-        ApiResult.response(httpServletResponse,new ApiResult(RetCode.USER_LOGIN).token(token));
+        ApiResult.response(httpServletResponse,new ApiResult<>(token,RetCode.USER_LOGIN));
     }
 }

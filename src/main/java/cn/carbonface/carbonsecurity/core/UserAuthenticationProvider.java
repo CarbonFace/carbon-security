@@ -3,8 +3,10 @@ package cn.carbonface.carbonsecurity.core;
 import cn.carbonface.carboncommon.dto.RetCode;
 import cn.carbonface.carbonsecurity.core.dto.CarbonUserDetails;
 import cn.carbonface.carbonsecurity.core.service.CarbonUserDetailsService;
+import feign.codec.DecodeException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -32,7 +34,12 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials(); // acquire password
-        CarbonUserDetails carbonUserDetails = (CarbonUserDetails) userDetailsService.loadUserByUsername(username);
+        CarbonUserDetails carbonUserDetails = null;
+        try {
+            carbonUserDetails = (CarbonUserDetails) userDetailsService.loadUserByUsername(username);
+        }catch (DecodeException e){
+            throw new InternalAuthenticationServiceException(e.getMessage(),e.getCause());
+        }
         if (carbonUserDetails == null){
             throw new UsernameNotFoundException(RetCode.USER_ACCOUNT_NOT_EXIST.getMessage());
         }

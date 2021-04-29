@@ -23,18 +23,12 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class UserLogoutSuccessHandler implements LogoutSuccessHandler {
 
-    private final TokenUtil tokenUtil;
-
-    public UserLogoutSuccessHandler(TokenUtil tokenUtil) {
-        this.tokenUtil = tokenUtil;
-    }
-
     @Override
     public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                         Authentication authentication) {
         String token = httpServletRequest.getHeader(JWTConfig.tokenHeader);
-        tokenUtil.addBlackList(token);
-        log.info("用户{}登出成功，Token信息已保存到Redis的黑名单中", tokenUtil.getUserNameByToken(token));
-        ApiResult.response(httpServletResponse,new ApiResult(RetCode.USER_LOGOUT));
+        TokenUtil.addBlackList(token);
+        log.info("用户{}登出成功，Token信息已保存到Redis的黑名单中", TokenUtil.getUserNameByToken(token));
+        ApiResult.response(httpServletResponse,new ApiResult<>(RetCode.USER_LOGOUT));
     }
 }

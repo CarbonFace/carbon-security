@@ -6,6 +6,7 @@ import cn.carbonface.carboncommon.tools.HttpUtil;
 import cn.carbonface.carbonsecurity.core.config.JWTConfig;
 import cn.carbonface.carbonsecurity.core.dto.CarbonUserDetails;
 import cn.carbonface.carbonsecurity.core.tools.TokenUtil;
+import feign.codec.DecodeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,12 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @Classname JWTAuthenticationFilter
- * @Description jwt authentication filter which is functioning as internal filter for security system
+ * Classname: JWTAuthenticationFilter
+ * Description: jwt authentication filter which is functioning as internal filter for security system
  *              which is mainly do the pre check and operations for token
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/3/31 16:35
- * @Version V1.0
+ * @author CarbonFace <553127022@qq.com>
+ * Date: 2021/3/31 16:35
+ * @version V1.0
  */
 @Slf4j
 public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
@@ -40,7 +41,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(JWTConfig.tokenHeader);
         if (token != null && token.startsWith(JWTConfig.tokenPrefix)) {
             if (TokenUtil.isBlackList(token)) {
-                ApiResult.response(response,new ApiResult(RetCode.USER_LOGIN_EXPIRED));
+                ApiResult.response(response,new ApiResult<>(RetCode.USER_LOGIN_EXPIRED));
                 return;
             }
             if (TokenUtil.hasToken(token)) {
@@ -55,18 +56,25 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
                     String validTime = TokenUtil.getRefreshTimeByToken(token);
                     if (TokenUtil.isValid(validTime)) {
                         // if the token is within the valid time, refresh the token, lay a new one and replaced the old one in the header
-                        String newToke = TokenUtil.refreshAccessToken(token);
-                        TokenUtil.deleteRedisToken(token);
-                        TokenUtil.setTokenInfo(newToke, username, ip);
-                        response.setHeader(JWTConfig.tokenHeader, newToke);
-                        log.info("用户{}的Token已过期，但为超过刷新时间，已刷新", username);
-                        token = newToke;
+                        try {
+                            String newToke = TokenUtil.refreshAccessToken(token);
+                            TokenUtil.deleteRedisToken(token);
+                            TokenUtil.setTokenInfo(newToke, username, ip);
+                            response.setHeader(JWTConfig.tokenHeader, newToke);
+                            log.info("用户{}的Token已过期，但为超过刷新时间，已刷新", username);
+                            token = newToke;
+                        }catch (DecodeException e){
+                            //catch the decodeException in case of the feign invoke catch something wrong
+                            ApiResult.response(response,new ApiResult<>(null,e.getMessage(),RetCode.USER_LOGIN_EXPIRED.getCode()));
+                            return;
+                        }
+
                     } else {
                         log.info("用户{}的Token已过期且超过刷新时间，不予刷新", username);
                         // if not within the valid time add to the black list
                         TokenUtil.addBlackList(token);
                         TokenUtil.deleteRedisToken(token);
-                        ApiResult.response(response,new ApiResult(RetCode.USER_LOGIN_EXPIRED));
+                        ApiResult.response(response,new ApiResult<>(RetCode.USER_LOGIN_EXPIRED));
                         return;
                     }
                 }
@@ -77,7 +85,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
                         // if the ip address changed and front page brings the same token for request, add to the black list
                         TokenUtil.addBlackList(token);
                         TokenUtil.deleteRedisToken(token);
-                        ApiResult.response(response,new ApiResult(null,"可能存在IP伪造风险",RetCode.USER_LOGIN_EXPIRED));
+                        ApiResult.response(response,new ApiResult<>(null,"可能存在IP伪造风险",RetCode.USER_LOGIN_EXPIRED.getCode()));
                         return;
                     }
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

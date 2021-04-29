@@ -1,5 +1,6 @@
 package cn.carbonface.carbonsecurity.core;
 
+import cn.carbonface.carboncommon.dto.ApiResult;
 import cn.carbonface.carbonsecurity.core.dto.CarbonUserDetails;
 import cn.carbonface.carbonsecurity.core.feignclient.UserClient;
 import cn.carbonface.carboncommon.dto.userdto.RoleAuth;
@@ -32,16 +33,16 @@ public class UserPermissionEvaluator implements PermissionEvaluator {
     public boolean hasPermission(Authentication authentication, Object targetUrl, Object permission) {
         CarbonUserDetails carbonUserDetails = (CarbonUserDetails) authentication.getPrincipal();
         Set<String> permissions = new HashSet<>(); // user authorization
-        List<RoleAuth> authList = userClient.getAuthByUserId(carbonUserDetails.getId());
-        authList.forEach(auth -> {
-            permissions.add(auth.getAuthPermission());
-        });
-
-        // if has permission return true
-        if (permissions.contains(permission.toString())) {
-            return true;
+        ApiResult<List<RoleAuth>> authResult = userClient.getAuthByUserId(carbonUserDetails.getId());
+        authResult.getData();
+        if (authResult.success()) {
+            List<RoleAuth> data = authResult.getData();
+            data.forEach(auth -> {
+                permissions.add(auth.getAuthPermission());
+            });
         }
-        return false;
+        // if has permission return true
+        return permissions.contains(permission.toString());
     }
 
     @Override

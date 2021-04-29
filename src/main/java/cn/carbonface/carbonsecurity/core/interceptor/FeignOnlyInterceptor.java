@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 @Component
 public class FeignOnlyInterceptor implements HandlerInterceptor {
 
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws CarbonException {
         boolean feignOnly = feignOnly(request,handler);
@@ -47,6 +46,9 @@ public class FeignOnlyInterceptor implements HandlerInterceptor {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
             feignOnly = method.getAnnotation(FeignOnly.class);
+            if (feignOnly ==null){
+                feignOnly = method.getClass().getAnnotation(FeignOnly.class);
+            }
         }else if (handler instanceof ResourceHttpRequestHandler){
             ApplicationContext applicationContext = ((ResourceHttpRequestHandler) handler).getApplicationContext();
             log.warn("WARN!THERE IS A TYPE WRONG WHICH NEED SOME ATTENTION!");
@@ -59,7 +61,7 @@ public class FeignOnlyInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
+        System.out.println("request = " + request);
     }
 
     @Override
