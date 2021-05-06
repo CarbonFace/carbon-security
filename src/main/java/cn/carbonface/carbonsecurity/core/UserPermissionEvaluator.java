@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @Classname UserPermissionEvaluator
- * @Description user permissions control for annotation @PreAuthorize
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/3/31 14:13
- * @Version V1.0
+ * Classname: UserPermissionEvaluator
+ * Description: user permissions control for annotation @PreAuthorize
+ * @author CarbonFace <553127022@qq.com>
+ * Date: 2021/3/31 14:13
+ * @version V1.0
  */
 @Component
 public class UserPermissionEvaluator implements PermissionEvaluator {

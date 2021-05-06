@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @Classname UserAccessDeniedHandler
- * @Description handler for user access denied
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/3/17 18:15
- * @Version V1.0
+ * Classname: UserAccessDeniedHandler
+ * Description: handler for user access denied
+ * @author CarbonFace <553127022@qq.com>
+ * Date: 2021/3/17 18:15
+ * @version V1.0
  */
 @Component
 @Slf4j

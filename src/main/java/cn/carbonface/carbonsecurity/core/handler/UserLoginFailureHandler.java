@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @Classname UserLoginFailureHandler
- * @Description handler for user login fail
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/3/17 18:33
- * @Version V1.0
+ * Classname: UserLoginFailureHandler
+ * Description: handler for user login fail
+ * @author CarbonFace <553127022@qq.com>
+ * Date: 2021/3/17 18:33
+ * @version V1.0
  */
 @Component
 @Slf4j

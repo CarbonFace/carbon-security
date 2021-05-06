@@ -25,11 +25,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @Classname SecurityConfig
- * @Description TODO
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/3/18 17:09
- * @Version V1.0
+ * Classname: SecurityConfig
+ * Description: TODO
+ * @author CarbonFace <553127022@qq.com>
+ * Date: 2021/3/18 17:09
+ * @version V1.0
  */
 @Configuration
 @EnableWebSecurity

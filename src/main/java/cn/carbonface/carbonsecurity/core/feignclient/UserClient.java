@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 /**
- * @Classname UserClient
- * @Description carbon-user service feign client
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/3/31 17:31
- * @Version V1.0
+ * Classname: UserClient
+ * Description: carbon-user service feign client
+ * @author CarbonFace <553127022@qq.com>
+ * Date: 2021/3/31 17:31
+ * @version V1.0
  */
 
 @FeignClient("carbon-user")

@@ -24,11 +24,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
- * @Classname TokenUtil
- * @Description TokenUtil used for security service
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/3/17 17:54
- * @Version V1.0
+ * Classname: TokenUtil
+ * Description: TokenUtil used for security service
+ * @author CarbonFace <553127022@qq.com>
+ * Date: 2021/3/17 17:54
+ * @version V1.0
  */
 @Component
 @Slf4j

@@ -22,11 +22,11 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Classname SecurityRedisUtil
- * @Description Special Security RedisUtil which is only use for security redis operation and use a separate redis database
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/4/8 10:02
- * @Version V1.0
+ * Classname: SecurityRedisUtil
+ * Description: Special Security RedisUtil which is only use for security redis operation and use a separate redis database
+ * @author CarbonFace <553127022@qq.com>
+ * Date: 2021/4/8 10:02
+ * @version V1.0
  */
 @Component
 @Slf4j

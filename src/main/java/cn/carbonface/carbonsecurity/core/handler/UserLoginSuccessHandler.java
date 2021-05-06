@@ -18,11 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Classname UserLoginSuccessHandler
- * @Description handler when user login success
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/3/17 18:28
- * @Version V1.0
+ * Classname: UserLoginSuccessHandler
+ * Description: handler when user login success
+ * @author CarbonFace <553127022@qq.com>
+ * Date: 2021/3/17 18:28
+ * @version V1.0
  */
 @Component
 @Slf4j

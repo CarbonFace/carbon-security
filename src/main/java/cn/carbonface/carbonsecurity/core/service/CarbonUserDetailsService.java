@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @Classname CarbonFaceUserDetailsService
- * @Description for user auth service
- * @Author CarbonFace <553127022@qq.com>
- * @Date 2021/3/18 10:18
- * @Version V1.0
+ * Classname: CarbonFaceUserDetailsService
+ * Description: for user auth service
+ * @author CarbonFace <553127022@qq.com>
+ * Date: 2021/3/18 10:18
+ * @version V1.0
  */
 @Service
 @Slf4j

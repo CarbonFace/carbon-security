@@ -5,11 +5,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**
- * @Classname JWTConfig
- * @Description JWTConfig
- * @Author CarbonFace   <553127022@qq.com>
- * @Date 2021/3/17 17:42
- * @Version V1.0
+ * Classname: JWTConfig
+ * Description: JWTConfig
+ * @author CarbonFace   <553127022@qq.com>
+ * Date: 2021/3/17 17:42
+ * @version V1.0
  */
 @ConfigurationProperties(prefix = "jwt")
 @Component

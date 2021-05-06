@@ -7,11 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 /**
- * @Classname CarbonUserDetails
- * @Description CarbonFace userDetails for spring security
- * @Author CarbonFace <553127022 @ qq.com>
- * @Date 2021/3/17 17:35
- * @Version V1.0
+ * Classname: CarbonUserDetails
+ * Description: CarbonFace userDetails for spring security
+ * @author CarbonFace <553127022 @ qq.com>
+ * Date: 2021/3/17 17:35
+ * @version V1.0
  */
 public class CarbonUserDetails extends User implements UserDetails {
 

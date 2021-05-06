@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @Classname UserNotLoginHandler
- * @Description handler for user not login case
- * @Author CarbonFace   <553127022@qq.com>
- * @Date 2021/3/17 18:27
- * @Version V1.0
+ * Classname: UserNotLoginHandler
+ * Description: handler for user not login case
+ * @author CarbonFace   <553127022@qq.com>
+ * Date: 2021/3/17 18:27
+ * @version V1.0
  */
 @Component
 @Slf4j
